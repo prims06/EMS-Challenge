@@ -15,10 +15,12 @@ export default function TimesheetsPage() {
   const { timesheetsAndEmployees } = useLoaderData();
   const [isCalendarView, setCalendarView] = useState(false)
   return (
-    <div>
-      
-        <div className="btn-list">
-          <div>
+    
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
+
+        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+          <div className="space-x-4">
         <button onClick={() => {
           setCalendarView(false)
         }}>Table View</button>
@@ -26,38 +28,75 @@ export default function TimesheetsPage() {
           setCalendarView(true)
         }}>Calendar View</button>
         </div>
-          <a className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow-md shadow-blue-200 mt-8"><Link to='/employees/new'>+ New</Link></a>
+          <Link
+            to="/timesheets/new"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm gap-2"
+          >
+            +
+            New
+          </Link>
         </div>
-      
-      {/* Replace `true` by a variable that is changed when the view buttons are clicked */}
-      {!isCalendarView ? (
-        <div>
-          <table className="table-auto">
-            <thead>
+
+       {!isCalendarView ? ( <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-gray-50">
               <tr>
-              <th>ID</th>
-              <th>Employee</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">ID</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">Employee</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">Timesheet Title</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">Start Time</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">End Time</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b text-right">Actions</th>
               </tr>
             </thead>
-            <tbody>
-
+            <tbody className="divide-y divide-red-100">
               {timesheetsAndEmployees.map((timesheet: any) => (
+                <tr key={timesheet.id} className="hover:bg-blue-50/50 transition-colors group">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-400">
+                    #{timesheet.id}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-800">
+                    {timesheet.full_name}
+                  </td>
+                   <td className="px-6 py-4 text-sm text-gray-700 font-medium">
+                    {timesheet.title}
+                  </td>
+                  
+                  <td className="px-6 py-4 text-sm text-gray-700 font-medium">
+                    {timesheet.start_time}
+                  </td>
+                  <td className="px-6 py-4">
+                      {timesheet.end_time}
+                  
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Link
+                      to={`/timesheets/${timesheet.id}/edit`}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-semibold p-2 rounded-md hover:bg-blue-50"
+                    >
+                      Modifier
+                    </Link>
+                    <Link
+                      to={`/timesheets/${timesheet.id}`}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-semibold p-2 rounded-md hover:bg-blue-50"
+                    >
+                      Details
+                    </Link>
 
-                <tr key={timesheet.id}>
-                  <td>#{timesheet.id}</td>
-                  <td>{timesheet.full_name} (ID: {timesheet.employee_id})</td>
-                  <td>{timesheet.start_time}</td>
-                  <td>{timesheet.end_time}</td>
-
+                  </td>
                 </tr>
-
               ))}
             </tbody>
+
           </table>
-        </div>
-      ) : (
+          <div className="flex justify-between items-center p-6 border-b border-gray-100">
+            <div className="text-sm">
+              {timesheetsAndEmployees.length} timesheets
+            </div>
+            
+          </div>
+        </div>)
+        : (
         <div>
           <p>
             To implement, see <a href="https://schedule-x.dev/docs/frameworks/react">Schedule X React documentation</a>.
@@ -65,6 +104,9 @@ export default function TimesheetsPage() {
         </div>
       )}
 
+
+      </div>
     </div>
+    
   );
 }

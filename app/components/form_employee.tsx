@@ -33,13 +33,13 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
             [name]: value,
         }));
     };
-    
+
 
     const handleSubmit = (e: any) => {
         try {
             setLoading(true);
             e.preventDefault();
-            onSubmit(formData);
+            onSubmit({...formData, id_card, cv});
         } catch (error: any) {
             setError(error.message);
         }
@@ -118,7 +118,7 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Intitulé du poste *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
                         <input
                             required
                             type="text"
@@ -199,9 +199,10 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
 
             <button
                 type="submit"
+                disabled={isLoading}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow-md shadow-blue-200 mt-8"
             >
-                {isEditing ? "Mettre à jour" : "Enregistrer l'employé"}
+                {isEditing ? "Update" : "Save"}
             </button>
 
         </form>

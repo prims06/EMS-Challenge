@@ -8,6 +8,7 @@ export async function loader() {
 }
 
 import type { ActionFunction } from "react-router";
+import TimesheetForm from "~/components/form_timesheet";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -31,17 +32,8 @@ export default function NewTimesheetPage() {
       <h1>Create New Timesheet</h1>
       <Form method="post">
         <div>
-          
-        </div>
-        <div>
-          <label htmlFor="start_time">Start Time</label>
-          <input type="datetime-local" name="start_time" id="start_time" required />
-        </div>
-        <div>
-          <label htmlFor="end_time">End Time</label>
-          <input type="datetime-local" name="end_time" id="end_time" required />
-        </div>
-        <button type="submit">Create Timesheet</button>
+          <TimesheetForm isEditing={false} />
+       </div>
       </Form>
       
     </div>
