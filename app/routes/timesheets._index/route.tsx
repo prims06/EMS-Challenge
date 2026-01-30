@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { useState } from "react";
 import { getDB } from "~/db/getDB";
 
@@ -13,28 +13,49 @@ export async function loader() {
 
 export default function TimesheetsPage() {
   const { timesheetsAndEmployees } = useLoaderData();
-
+  const [isCalendarView, setCalendarView] = useState(false)
   return (
     <div>
-      <div>
-        <button>Table View</button>
-        <button>Calendar View</button>
-      </div>
+      
+        <div className="btn-list">
+          <div>
+        <button onClick={() => {
+          setCalendarView(false)
+        }}>Table View</button>
+        <button onClick={() => {
+          setCalendarView(true)
+        }}>Calendar View</button>
+        </div>
+          <a className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow-md shadow-blue-200 mt-8"><Link to='/employees/new'>+ New</Link></a>
+        </div>
+      
       {/* Replace `true` by a variable that is changed when the view buttons are clicked */}
-      {true ? (
+      {!isCalendarView ? (
         <div>
-          {timesheetsAndEmployees.map((timesheet: any) => (
-            <div key={timesheet.id}>
-              <ul>
-                <li>Timesheet #{timesheet.id}</li>
-                <ul>
-                  <li>Employee: {timesheet.full_name} (ID: {timesheet.employee_id})</li>
-                  <li>Start Time: {timesheet.start_time}</li>
-                  <li>End Time: {timesheet.end_time}</li>
-                </ul>
-              </ul>
-            </div>
-          ))}
+          <table className="table-auto">
+            <thead>
+              <tr>
+              <th>ID</th>
+              <th>Employee</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {timesheetsAndEmployees.map((timesheet: any) => (
+
+                <tr key={timesheet.id}>
+                  <td>#{timesheet.id}</td>
+                  <td>{timesheet.full_name} (ID: {timesheet.employee_id})</td>
+                  <td>{timesheet.start_time}</td>
+                  <td>{timesheet.end_time}</td>
+
+                </tr>
+
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <div>
@@ -43,11 +64,7 @@ export default function TimesheetsPage() {
           </p>
         </div>
       )}
-      <hr />
-      <ul>
-        <li><a href="/timesheets/new">New Timesheet</a></li>
-        <li><a href="/employees">Employees</a></li>
-      </ul>
+
     </div>
   );
 }

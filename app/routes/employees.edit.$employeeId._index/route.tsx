@@ -8,17 +8,20 @@ export const action: ActionFunction = async ({ request }) => {
 
   const db = await getDB();
   await db.run(
-    'INSERT INTO employees (full_name) VALUES (?)',
-    [full_name]
+    'UPDATE employees SET full_name = ? WHERE id = ?',
+    [full_name, formData.get("id")]
   );
 
   return redirect("/employees");
 }
 
-export default function NewEmployeePage() {
+export default function EditEmployeePage() {
+
+
+
   return (
     <div>
-       <EmployeeForm isEditing={false} />
+        <EmployeeForm initialData={{  }} isEditing={true} />
     </div>
   );
 }

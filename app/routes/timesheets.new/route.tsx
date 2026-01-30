@@ -1,4 +1,4 @@
-import { useLoaderData, Form, redirect } from "react-router";
+import { useLoaderData, Form, redirect, Link } from "react-router";
 import { getDB } from "~/db/getDB";
 
 export async function loader() {
@@ -25,13 +25,13 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function NewTimesheetPage() {
-  const { employees } = useLoaderData(); // Used to create a select input
+  const { employees } = useLoaderData();
   return (
     <div>
       <h1>Create New Timesheet</h1>
       <Form method="post">
         <div>
-          {/* Use employees to create a select input */}
+          
         </div>
         <div>
           <label htmlFor="start_time">Start Time</label>
@@ -43,11 +43,7 @@ export default function NewTimesheetPage() {
         </div>
         <button type="submit">Create Timesheet</button>
       </Form>
-      <hr />
-      <ul>
-        <li><a href="/timesheets">Timesheets</a></li>
-        <li><a href="/employees">Employees</a></li>
-      </ul>
+      
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -33,7 +34,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <nav className=" mb-12 bg-gray-300 p-4 rounded-md shadow-gray-900 ">
+          <div className="flex justify-center space-x-4">
+            <a className={`${location.pathname === '/timesheets' ? 'text-blue-500'
+                        : 'text-black-300 hover:bg-white/5 hover:text-blue-800'} 'rounded-md px-3 py-2 text-lg'`}><Link to="/timesheets">Timesheets</Link></a>
+            <a className={`${location.pathname === '/employees' ? 'text-blue-500'
+                        : 'text-black-300 hover:bg-white/5 hover:text-blue-800'} 'rounded-md px-3 py-2 text-lg'`}><Link to="/employees">Employees</Link></a>
+          </div>
+        </nav>
+        <div className="page-content">
+          {children}
+        </div>
+        
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -42,7 +54,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (<Layout>
+    <Outlet />
+  </Layout>);
+
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

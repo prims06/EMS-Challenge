@@ -1,2 +1,0 @@
-sqlite_path: './app/db/db.sqlite'
-schema_setup_path: './app/db/setup.sql'
