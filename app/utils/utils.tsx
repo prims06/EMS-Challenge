@@ -1,4 +1,4 @@
-const handleFileUpload = async (file:any) => {
+export const handleFileUpload = async (file:any) => {
   if (!file) return null;
   if (typeof file === 'string') return file;
 
@@ -7,5 +7,5 @@ const handleFileUpload = async (file:any) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
-  });
+  }) as any;
 };

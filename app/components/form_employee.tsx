@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { handleFileUpload } from '~/utils/utils';
 
 
 
 const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
-    const initialState = initialData || {
+    const initialState = initialData ? { start_date: '04-23-1990', end_date: new Date(initialData.end_date).toDateString(), ...initialData } : {
         full_name: '',
         email: '',
         phone_number: '',
@@ -35,11 +36,13 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
     };
 
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         try {
             setLoading(true);
             e.preventDefault();
-            onSubmit({...formData, id_card, cv});
+            const idCardFile = await handleFileUpload(id_card);
+            const cvFile = await handleFileUpload(cv);
+            onSubmit({ ...formData, id_card: idCardFile, cv: cvFile });
         } catch (error: any) {
             setError(error.message);
         }
@@ -51,6 +54,7 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
 
     return (
         <form
+            method="post"
             onSubmit={handleSubmit}
             className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-sm border border-gray-200"
         >

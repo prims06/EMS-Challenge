@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
-import { useLoaderData } from 'react-router';
-import { getDB } from '~/db/getDB';
-export async function loader() {
-    const db = await getDB()
-    const employees = await db.all("SELECT * FROM employees;")
 
-    return { employees }
-}
-const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
-    const { employees } = useLoaderData();
+const TimesheetForm = ({ initialData, employees, onSubmit, isEditing = false }: any) => {
+
     const initialState = initialData || {
         title: '',
         start_time: '',
@@ -18,7 +11,7 @@ const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
 
     const [formData, setFormData] = useState(initialState);
     const [isLoading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -31,9 +24,13 @@ const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         try {
+            if(isLoading) return;
+            if (!formData.employee_id) {
+                setError("Please select an employee.");
+                return;
+            }
             setLoading(true);
-            // Ensure employee_id is sent as a number for the DB
-            onSubmit({ ...formData, employee_id: Number(formData.employee_id) });
+            onSubmit({ ...formData, employee_id: formData.employee_id });
         } catch (error: any) {
             setError(error.message);
         } finally {
@@ -53,7 +50,6 @@ const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
             <div className="grid grid-cols-1 gap-y-4">
-                {/* Employee Selection Dropdown */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Employee *</label>
                     <select
@@ -63,7 +59,7 @@ const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white transition-all"
                     >
-                        <option value="">Select an employee</option>
+                        <option value="">Select employee</option>
                         {employees.map((emp: any) => (
                             <option key={emp.id} value={emp.id}>
                                 {emp.full_name}
@@ -72,15 +68,14 @@ const TimesheetForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                     </select>
                 </div>
 
-                {/* Timesheet Title */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Title / Description</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                     <input
                         type="text"
                         name="title"
+                        required
                         value={formData.title}
                         onChange={handleChange}
-                        placeholder="Ex: Weekly Development"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
                     />
                 </div>

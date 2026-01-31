@@ -74,7 +74,7 @@ export default function TimesheetsPage() {
                       to={`/timesheets/${timesheet.id}/edit`}
                       className="text-blue-600 hover:text-blue-800 text-sm font-semibold p-2 rounded-md hover:bg-blue-50"
                     >
-                      Modifier
+                      Edit
                     </Link>
                     <Link
                       to={`/timesheets/${timesheet.id}`}
