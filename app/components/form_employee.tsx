@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { handleFileUpload } from '~/utils/utils';
 
 
 
+
 const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
-    const initialState = initialData ? { start_date: '04-23-1990', end_date: new Date(initialData.end_date).toDateString(), ...initialData } : {
+    const initialState = initialData ? initialData : {
         full_name: '',
         email: '',
         phone_number: '',
@@ -16,12 +17,14 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
         start_date: '',
         end_date: '',
         id_card: '',
-        cv: ''
+        cv: '',
+        profile: ''
     };
 
     const [formData, setFormData] = useState(initialState);
-    const [id_card, setIdCard] = useState(initialState.id_card);
-    const [cv, setCv] = useState(initialState.cv);
+    const [id_card, setIdCard] = useState(initialState?.id_card);
+    const [cv, setCv] = useState(initialState?.cv);
+    const [profile, setProfile] = useState(initialState?.profile);
 
 
     const [isLoading, setLoading] = useState(false);
@@ -38,11 +41,14 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
 
     const handleSubmit = async (e: any) => {
         try {
-            setLoading(true);
             e.preventDefault();
+            setError(null);
+            if (isLoading) return;
+            setLoading(true);
             const idCardFile = await handleFileUpload(id_card);
             const cvFile = await handleFileUpload(cv);
-            onSubmit({ ...formData, id_card: idCardFile, cv: cvFile });
+            const profileFile = await handleFileUpload(profile);
+            onSubmit({ ...formData, id_card: idCardFile, cv: cvFile, profile: profileFile });
         } catch (error: any) {
             setError(error.message);
         }
@@ -96,7 +102,14 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
                         <PhoneInput
                             enableAreaCodes={true}
-
+                            isValid={(value: any, country: any) => {
+                                
+                                if ((/^\+[1-9]\d{1,14}$/).test(`+${value}`)) {
+                                    return true;
+                                } else {
+                                    return "Invalid phone number";
+                                }
+                            }}
                             inputProps={{
                                 name: "phone_number",
                                 required: true,
@@ -104,7 +117,7 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                                 className: "w-full px-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
 
                             }}
-                            value={formData.phone_number}
+                            value={formData?.phone_number}
                             onChange={(value) => handleChange({ target: { name: 'phone_number', value } })}
                         />
                     </div>
@@ -168,7 +181,21 @@ const EmployeeForm = ({ initialData, onSubmit, isEditing = false }: any) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Carte d'identité</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+                        <input
+                            type="file"
+                            name="profile"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    setProfile(file);
+                                }
+                            }}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">ID Card</label>
                         <input
                             type="file"
                             name="id_card"

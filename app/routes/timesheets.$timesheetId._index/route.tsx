@@ -49,14 +49,7 @@ export default function TimesheetPage() {
         <span>{new Date(timesheet.end_time).toLocaleString()}</span>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <Link 
-          to="/timesheets" 
-          className="text-gray-500 hover:text-gray-700 text-sm font-medium"
-        >
-          ← Back to Timesheets
-        </Link>
-      </div>
+     
     </div>
   )
 }

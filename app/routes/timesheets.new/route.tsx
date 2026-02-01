@@ -40,7 +40,6 @@ export default function NewTimesheetPage() {
   return (
     <div className="py-8">
       
-
       <TimesheetForm
         initialData={null}
         employees={employees}

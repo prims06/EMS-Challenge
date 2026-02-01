@@ -1,7 +1,7 @@
 import { redirect, useLoaderData, useSubmit, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
-import EmployeeForm from "~/components/form_employee";
 import { getDB } from "~/db/getDB";
 import { handleFileUpload } from "~/utils/utils";
+import EmployeeForm from "~/components/form_employee";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const db = await getDB();
@@ -13,24 +13,24 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return { employee };
 };
 
-// L'ACTION : Modifie les données (Côté Serveur)
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const db = await getDB();
   const idCardPath = await handleFileUpload(formData.get("id_card"));
   const cvPath = await handleFileUpload(formData.get("cv"));
+  const profilePath = await handleFileUpload(formData.get("profile"));
   const query = `
     UPDATE employees SET 
       full_name = ?, email = ?, phone_number = ?, date_of_birth = ?, 
-      job_title = ?, departement = ?, start_date = ?, end_date = ?, id_card = ?, cv = ?
+      job_title = ?, departement = ?, start_date = ?, end_date = ?, id_card = ?, cv = ?, profile = ?
     WHERE id = ?
   `;
 
   await db.run(query, [
     data.full_name, data.email, data.phone_number, data.date_of_birth,
     data.job_title, data.departement, data.start_date, data.end_date,
-    idCardPath, cvPath, params.employeeId
+    idCardPath, cvPath, profilePath, params.employeeId
   ]);
 
   return redirect("/employees");

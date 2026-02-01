@@ -24,7 +24,11 @@ const TimesheetForm = ({ initialData, employees, onSubmit, isEditing = false }: 
     const handleSubmit = (e: any) => {
         e.preventDefault();
         try {
-            if(isLoading) return;
+            if (new Date(formData.start_time) >= new Date(formData.end_time)) {
+                setError("Start time must be before end time.");
+                return;
+            }
+            if (isLoading) return;
             if (!formData.employee_id) {
                 setError("Please select an employee.");
                 return;
@@ -54,6 +58,7 @@ const TimesheetForm = ({ initialData, employees, onSubmit, isEditing = false }: 
                     <label className="block text-sm font-medium text-gray-700 mb-1">Employee *</label>
                     <select
                         required
+                         defaultValue={''} 
                         name="employee_id"
                         value={formData.employee_id}
                         onChange={handleChange}
@@ -112,7 +117,7 @@ const TimesheetForm = ({ initialData, employees, onSubmit, isEditing = false }: 
                 disabled={isLoading}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow-md shadow-blue-200 mt-8 disabled:bg-gray-400 transition-all"
             >
-                {isLoading ? "Processing..." : (isEditing ? "Update Timesheet" : "Save Timesheet")}
+                {isEditing ? "Update" : "Save"}
             </button>
         </form>
     );

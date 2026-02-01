@@ -27,7 +27,8 @@ CREATE TABLE employees (
     start_date DATE NULL,
     end_date DATE NULL,
     id_card TEXT,
-    cv TEXT
+    cv TEXT,
+    profile TEXT NULL
 );
 
 -- Create timesheets table

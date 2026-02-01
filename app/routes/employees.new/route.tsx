@@ -1,6 +1,7 @@
-import { redirect, useLoaderData, useSubmit, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import EmployeeForm from "~/components/form_employee";
+import { redirect, useSubmit, type ActionFunctionArgs } from "react-router";
 import { getDB } from "~/db/getDB";
+
 
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -12,14 +13,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     INSERT INTO employees (
       full_name, email, phone_number, date_of_birth, 
       job_title, departement, start_date, end_date, 
-      id_card, cv
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      id_card, cv, profile
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   await db.run(query, [
     data.full_name, data.email, data.phone_number, data.date_of_birth,
     data.job_title, data.departement, data.start_date, data.end_date,
-    data.id_card, data.cv
+    data.id_card, data.cv, data.profile
   ]);
 
   return redirect("/employees");
